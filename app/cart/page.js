@@ -38,7 +38,7 @@ export default function Home() {
           </div>
           <div className="flex items-center flex-col fixed top-1/3 left-2">
             <p className="text-lg">Total</p>
-            <p className="text-white bg-black p-2 rounded-md cursor-pointer">
+            <p className="text-white bg-black p-2 rounded-md cursor-pointer text-lg sm:text-2xl">
               {" "}
               {totalAmount} ₹
             </p>

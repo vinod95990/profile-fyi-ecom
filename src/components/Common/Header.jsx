@@ -1,4 +1,9 @@
-import { Anchor, Basket, HouseSimple } from "@phosphor-icons/react/dist/ssr";
+import {
+  Anchor,
+  Basket,
+  HouseSimple,
+  CaretRight,
+} from "@phosphor-icons/react/dist/ssr";
 import { useCallback, useState } from "react";
 import CartItemsSummary from "./CartItemsSummary";
 import { debounce } from "lodash";
@@ -44,15 +49,21 @@ function Header(props) {
           >
             <div className="py-2 px-6 sm:py-6 sm:px-11 bg-black  transition-all h-full cursor-pointer">
               {itemsInCart?.length > 0 ? (
-                <p
-                  className="text-[#bd4f44] text-base sm:text-xl hover:underline"
+                <div
+                  className="flex items-center gap-1"
                   onClick={handleRedirectToCart}
                 >
-                  {itemsInCart?.length || 0}{" "}
-                  <span className="text-white text-sm sm:text-base">
-                    IN BAG
-                  </span>
-                </p>
+                  <p className="text-[#bd4f44] text-base sm:text-xl hover:underline">
+                    {itemsInCart?.length || 0}{" "}
+                    <span className="text-white text-sm sm:text-base">
+                      IN BAG
+                    </span>
+                  </p>
+                  <CaretRight
+                    size={30}
+                    className="text-white hover:text-[#c1c1c1] w-5 sm:w-6"
+                  />
+                </div>
               ) : (
                 <Basket
                   size={30}

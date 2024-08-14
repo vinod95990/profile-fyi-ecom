@@ -1,3 +1,10 @@
+import { toastNotificationType } from "@/src/Constants";
+import {
+  addToCartNotification,
+  minimumOrderQuantityReached,
+  reduceFromCartNotification,
+  removeFromCartNotification,
+} from "@/src/utils/common";
 import { Minus, Plus, Trash } from "@phosphor-icons/react/dist/ssr";
 import { find } from "lodash";
 
@@ -18,11 +25,14 @@ function ProductInDetail(props) {
       tags,
       rating,
       minimumOrderQuantity,
+      discountPercentage,
     },
     setItemsInCart,
   } = props;
 
   const handleAddToCart = () => {
+    let isSuccessful = false;
+
     setItemsInCart((prev) => {
       // Find the item in the cart by its ID
       const itemInCart = find(prev, { id });
@@ -30,6 +40,8 @@ function ProductInDetail(props) {
       if (itemInCart) {
         // Item already in cart, check quantity
         if (itemInCart.quantity < minimumOrderQuantity) {
+          isSuccessful = toastNotificationType.success;
+
           return prev.map((item) => {
             if (item.id === id) {
               return {
@@ -40,12 +52,13 @@ function ProductInDetail(props) {
             return item;
           });
         } else {
-          alert(
-            `Minimum order quantity for this item is ${minimumOrderQuantity}.`
-          );
+          isSuccessful = toastNotificationType.limit;
+
           return prev;
         }
       } else {
+        isSuccessful = toastNotificationType.success;
+
         // Item not in cart, add new item
         return [
           ...prev,
@@ -61,23 +74,37 @@ function ProductInDetail(props) {
             tags,
             availabilityStatus,
             imageSrc,
+            discountPercentage,
           },
         ];
       }
     });
+
+    if (isSuccessful == toastNotificationType.limit) {
+      minimumOrderQuantityReached(minimumOrderQuantity);
+      return;
+    }
+    if (isSuccessful == toastNotificationType.success) {
+      addToCartNotification(title);
+    }
   };
 
   const handleRemoveFromCart = () => {
     setItemsInCart((prevItemsInCart) =>
       prevItemsInCart.filter((item) => item.id !== id)
     );
+
+    removeFromCartNotification(title);
   };
 
   const handleSubtractQuantity = () => {
+    let isSuccessful = false;
     setItemsInCart((prevItemsInCart) => {
       const itemIndex = prevItemsInCart.findIndex((item) => item.id === id);
 
+      //item should exists and quantity should be greater than 1, that is item is more than 1
       if (itemIndex !== -1 && prevItemsInCart[itemIndex].quantity > 1) {
+        isSuccessful = toastNotificationType.success;
         return prevItemsInCart.map((item, index) =>
           index === itemIndex ? { ...item, quantity: item.quantity - 1 } : item
         );
@@ -85,6 +112,10 @@ function ProductInDetail(props) {
         return prevItemsInCart; // prevent quantity to go below 1
       }
     });
+
+    if (isSuccessful == toastNotificationType.success) {
+      reduceFromCartNotification(title);
+    }
   };
 
   return (
@@ -144,7 +175,7 @@ function ProductInDetail(props) {
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-1 w-full">
+        <div className="flex items-center justify-between gap-1 w-full border-t-2 border-[#e7e7e7] py-2">
           <p className="text-[#363636] text-lg sm:text-xl font-bold">Total</p>
           <p className="text-[#363636] text-xl sm:text-2xl  font-extrabold">
             {discountedPriceInRupee
@@ -162,23 +193,29 @@ function ProductInDetail(props) {
         <Trash
           size={32}
           weight="fill"
-          className="hover:text-[#363636] transition-colors"
+          className="hover:text-[#585858] transition-colors w-8 sm:w-7"
           onClick={handleRemoveFromCart}
         />
         <Plus
           size={32}
           weight="fill"
-          className="hover:text-[#363636] transition-colors"
+          className="hover:text-[#585858] transition-colors  w-8 sm:w-7"
           onClick={handleAddToCart}
         />
 
         <Minus
           size={32}
           weight="fill"
-          className="hover:text-[#363636] transition-colors"
+          className="hover:text-[#585858] transition-colors  w-8 sm:w-7"
           onClick={handleSubtractQuantity}
         />
       </div>
+
+      {discountPercentage && discountPercentage > 0 && (
+        <p className="absolute top-0 left-0 bg-slate-950 text-white text-sm sm:text-base tracking-wider p-2">
+          {discountPercentage}% OFF
+        </p>
+      )}
     </div>
   );
 }

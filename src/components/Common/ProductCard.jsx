@@ -1,7 +1,14 @@
 import Image from "next/image";
 import { ShoppingBag } from "@phosphor-icons/react/dist/ssr";
-import { calculateDiscountedPrice, convertToRupees } from "@/src/utils/common";
+import {
+  addToCartNotification,
+  calculateDiscountedPrice,
+  convertToRupees,
+  minimumOrderQuantityReached,
+} from "@/src/utils/common";
 import { find } from "lodash";
+import { toast } from "react-toastify";
+import { toastNotificationType } from "@/src/Constants";
 
 function ProductCard(props) {
   const {
@@ -27,6 +34,8 @@ function ProductCard(props) {
     discountPercentage
   );
   const handleAddToCart = () => {
+    let isSuccessful = false;
+
     setItemsInCart((prev) => {
       // Find the item in the cart by its ID
       const itemInCart = find(prev, { id });
@@ -34,6 +43,7 @@ function ProductCard(props) {
       if (itemInCart) {
         // Item already in cart, check quantity
         if (itemInCart.quantity < minimumOrderQuantity) {
+          isSuccessful = toastNotificationType.success;
           return prev.map((item) => {
             if (item.id === id) {
               return {
@@ -44,12 +54,12 @@ function ProductCard(props) {
             return item;
           });
         } else {
-          alert(
-            `Minimum order quantity for this item is ${minimumOrderQuantity}.`
-          );
+          isSuccessful = toastNotificationType.limit;
           return prev;
         }
       } else {
+        isSuccessful = toastNotificationType.success;
+
         // Item not in cart, add new item
         return [
           ...prev,
@@ -65,10 +75,20 @@ function ProductCard(props) {
             tags,
             availabilityStatus,
             imageSrc,
+            discountPercentage,
           },
         ];
       }
     });
+
+    if (isSuccessful == toastNotificationType.limit) {
+      minimumOrderQuantityReached(minimumOrderQuantity);
+
+      return;
+    }
+    if (isSuccessful == toastNotificationType.success) {
+      addToCartNotification(title);
+    }
   };
 
   return (
@@ -81,13 +101,22 @@ function ProductCard(props) {
           {title}
         </h1>
       </div>
-      <Image
-        src={imageSrc}
-        width={200}
-        height={200}
-        alt={title}
-        className="transition-all w-[200px] h-[200px]   lg:w-[150px] lg:h-[150px] object-contain hover:scale-125 hover:rotate-3"
-      ></Image>
+
+      <div className="relative w-full flex items-center justify-center">
+        <Image
+          src={imageSrc}
+          width={200}
+          height={200}
+          alt={title}
+          className="transition-all w-[200px] h-[200px]   lg:w-[150px] lg:h-[150px] object-contain hover:scale-125 hover:rotate-3"
+        ></Image>
+        {discountPercentage && discountPercentage > 0 && (
+          <p className="absolute top-0 left-0 bg-slate-950 text-white text-sm sm:text-xs tracking-wider p-1 rounded-md">
+            {discountPercentage}% OFF
+          </p>
+        )}
+      </div>
+
       {/* <Tags tags={tags} /> */}
 
       {/* FOOTER */}
