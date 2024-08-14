@@ -7,7 +7,7 @@ function Filters() {
       <div className="p-4 md:p-8 flex items-start justify-center gap-3 flex-col">
         <p className="text-sm md:text-base font-extrabold">SORT</p>
         <div className="flex items-center justify-between gap-2 w-full">
-          <p className=" text-xs md:text-sm text-[#818181]">What's new</p>
+          <p className=" text-xs md:text-sm text-[#818181]">What&apos;s new</p>
           <CaretDown
             size={28}
             className="hover:text-[#585858] text-[#818181] transition-colors  w-2 sm:w-4"
