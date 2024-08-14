@@ -128,7 +128,7 @@ function ProductInDetail(props) {
         className="transition-all w-[200px] h-[200px]   lg:w-[150px] lg:h-[150px] object-contain hover:scale-125 hover:rotate-3"
       ></Image>
 
-      <div className="flex flex-col items-start justify-center gap-4 font-sans bg-[#f6f6f6] w-full p-8">
+      <div className="relative flex flex-col items-start justify-center gap-4 font-sans bg-[#f6f6f6] w-full p-8">
         <Tags tags={tags} />
         <div className="flex flex-col items-start text-start justify-center gap-1 w-full ">
           <p className="text-[#c1c1c1] text-base md:text-lg text-start text-wrap break-words font-bold pr-3">
@@ -184,31 +184,31 @@ function ProductInDetail(props) {
             ₹
           </p>
         </div>
-      </div>
 
-      <div
-        className="flex flex-col gap-2 absolute top-2 right-2
+        <div
+          className="flex flex-col gap-2 absolute top-2 right-2
  "
-      >
-        <Trash
-          size={32}
-          weight="fill"
-          className="hover:text-[#585858] transition-colors w-8 sm:w-7"
-          onClick={handleRemoveFromCart}
-        />
-        <Plus
-          size={32}
-          weight="fill"
-          className="hover:text-[#585858] transition-colors  w-8 sm:w-7"
-          onClick={handleAddToCart}
-        />
+        >
+          <Trash
+            size={32}
+            weight="fill"
+            className="hover:text-[#585858] transition-colors  w-7"
+            onClick={handleRemoveFromCart}
+          />
+          <Plus
+            size={32}
+            weight="fill"
+            className="hover:text-[#585858] transition-colors   w-7"
+            onClick={handleAddToCart}
+          />
 
-        <Minus
-          size={32}
-          weight="fill"
-          className="hover:text-[#585858] transition-colors  w-8 sm:w-7"
-          onClick={handleSubtractQuantity}
-        />
+          <Minus
+            size={32}
+            weight="fill"
+            className="hover:text-[#585858] transition-colors  w-7  "
+            onClick={handleSubtractQuantity}
+          />
+        </div>
       </div>
 
       {discountPercentage && discountPercentage > 0 && (
