@@ -2,6 +2,7 @@
 import Header from "@/src/components/Common/Header";
 import ProductCard from "@/src/components/Common/ProductCard";
 import Searchbar from "@/src/components/Common/Searchbar";
+import Filters from "@/src/components/Filters";
 import { useCart } from "@/src/context";
 import { convertToRupees } from "@/src/utils/common";
 import { useQuery } from "@tanstack/react-query";
@@ -40,12 +41,13 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-4 items-center sm:flex-row sm:items-start py-20 ">
-        <div className="sm:w-1/5">
-          <div className="flex items-center gap-3 font-mono px-7">
+        <div className="sm:w-1/5 ">
+          <div className="flex items-center gap-3 font-mono px-7  ">
             <p className="text-[#d6d6d6]">Shop</p>
             <p className="text-[#d6d6d6]"> {`>`}</p>
             <p className="text-black"> Home</p>
           </div>
+          <Filters />
         </div>
 
         <div className="w-full px-6 sm:w-4/5">
